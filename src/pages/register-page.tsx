@@ -1,6 +1,5 @@
-import { FormEvent, FormEventHandler, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { DefaultProps } from "../interfaces/default-props";
-import { MainTemplate } from "../layouts/main-template";
 import { InputField } from "../components/input-field";
 import { CenterItems } from "../layouts/center-items";
 import styled from "@emotion/styled";
@@ -11,10 +10,6 @@ import { SecurityQuestion } from "../enums/SecurityQuestion";
 import { InputCheckbox } from "../components/input-checkbox";
 import { User } from "../interfaces/user";
 import { hasNumber, hasSymbol, isValidEmail } from "../libs/utils";
-import { error } from "console";
-import axios from "axios";
-import { BACKEND_SERVER } from "../connections";
-import { request } from "http";
 import { RegisterUser } from "../controllers/user-controller";
 import { UserAuthData } from "../interfaces/user-auth-data";
 
@@ -43,9 +38,11 @@ import { UserAuthData } from "../interfaces/user-auth-data";
         color: red;
         visibility: hidden;
     `
+    
 
-export const RegisterPage: React.FC<DefaultProps> = ({children}) => {
+export const RegisterPage: React.FC<DefaultProps> = ({}) => {
     const [user, setUser] = useState<User>({isBanned: false} as User)
+    const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [securityQuestion, setSecurityQuestion] = useState<string>()
@@ -104,7 +101,7 @@ export const RegisterPage: React.FC<DefaultProps> = ({children}) => {
     
 
     const checkEmail = () => {
-        if (!user.email || !isValidEmail(user.email)) {
+        if (!email || !isValidEmail(email)) {
             errorRef.current.innerText = 'Email must match the format \'[example]@[domain].com\''
             return false
         }
@@ -158,7 +155,7 @@ export const RegisterPage: React.FC<DefaultProps> = ({children}) => {
         }
         errorRef.current.innerText = '[Error message]'
         errorRef.current.style.visibility = 'hidden'
-        await RegisterUser(user, {email: user.email, password: password, securityQuestion: securityQuestion, securityAnswer: securityAnswer} as UserAuthData)
+        await RegisterUser(user, {email: email, password: password, securityQuestion: securityQuestion, securityAnswer: securityAnswer} as UserAuthData)
         
     }
 
@@ -186,7 +183,6 @@ export const RegisterPage: React.FC<DefaultProps> = ({children}) => {
                         placeholder="Input first name" 
                         name="firstName"
                         onChange={e => {handleOnChange(e)}}
-                        value={user.firstName}
                         type="text"/>
 
                         <InputField
@@ -216,7 +212,7 @@ export const RegisterPage: React.FC<DefaultProps> = ({children}) => {
                         label="Email"
                         placeholder="Example: yourname@example.com"
                         name="email"
-                        onChange={handleOnChange}/>
+                        onChange={e => setEmail(e.target.value)}/>
                     </div>
                     <div className="mb-1">
                         <InputField
