@@ -9,15 +9,17 @@ interface ComponentProps {
     placeholder?: string
 }
 const Label = styled.p`
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     margin-bottom: 4px;
+    // margin-left: 2px;
     text-wrap: nowrap;
 `
 const Select = styled.select`
     width: 100%;
-    padding: 0.3rem 0.1rem;
+    padding: 0.4rem 0.3rem;
     border-radius: 3px;
-    border-color: #cdd0d1;
+    max-height: 2rem;
+    border: 1px solid #cdd0d1;
 `
 
 export const InputSelect: React.FC<ComponentProps> = ({label, placeholder, name, children, onChange}) => {

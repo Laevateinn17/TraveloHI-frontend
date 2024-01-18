@@ -1,5 +1,5 @@
 import axios from "axios"
-import { BACKEND_SERVER } from "../connections"
+import { BACKEND_SERVER } from "../defines/connections"
 import { User } from "../interfaces/user"
 import { UserAuthData } from "../interfaces/user-auth-data"
 

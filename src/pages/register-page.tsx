@@ -1,9 +1,7 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { DefaultProps } from "../interfaces/default-props";
 import { InputField } from "../components/input-field";
-import { CenterItems } from "../layouts/center-items";
 import styled from "@emotion/styled";
-import { PrimaryButton } from "../components/primary-button";
 import { InputSelect } from "../components/input-select";
 import { Gender } from "../enums/Gender";
 import { SecurityQuestion } from "../enums/SecurityQuestion";
@@ -12,20 +10,8 @@ import { User } from "../interfaces/user";
 import { hasNumber, hasSymbol, isValidEmail } from "../libs/utils";
 import { RegisterUser } from "../controllers/user-controller";
 import { UserAuthData } from "../interfaces/user-auth-data";
+import { SecondaryButton } from "../components/secondary-button";
 
-    const FormContainer = styled.div`
-        min-width: 40%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        background-color: white;
-        border-radius: 5px; 
-        margin: 5vw 0;
-        padding: 2rem 5%;
-        filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
-    `
 
     const NameInputContainer = styled.div`
         display: flex;
@@ -39,6 +25,10 @@ import { UserAuthData } from "../interfaces/user-auth-data";
         visibility: hidden;
     `
     
+    const Title = styled.p`
+        font-size: 1.4rem;
+        margin-bottom: 1.5rem;
+    `
 
 export const RegisterPage: React.FC<DefaultProps> = ({}) => {
     const [user, setUser] = useState<User>({isBanned: false} as User)
@@ -168,14 +158,13 @@ export const RegisterPage: React.FC<DefaultProps> = ({}) => {
     }
 
 
-
     
     
     return (
-        <div className="" style={{width: "100%", height: "100%", backgroundColor: "#30A1EA"}}>
-        <CenterItems>
-            <FormContainer>
-                <h1 style={{textAlign: "center", marginBottom: "2rem", fontSize: "1.5rem"}}>Create an account</h1>
+    <div className="empty-container">
+        <div className="center-items">
+            <div className="form-container">
+                <Title>Create an account</Title>
                 <form action="" method="POST" onSubmit={handleSubmit}>
                     <NameInputContainer>
                         <InputField
@@ -244,10 +233,10 @@ export const RegisterPage: React.FC<DefaultProps> = ({}) => {
                     <div className="mb-1">
                         <ErrorMessage ref={errorRef}>[Error message]</ErrorMessage>
                     </div>
-                    <PrimaryButton >Register account</PrimaryButton>
+                    <SecondaryButton>Register account</SecondaryButton>
                 </form>
-            </FormContainer>
-        </CenterItems>
+            </div>
+        </div>
     </div>
     )
 }

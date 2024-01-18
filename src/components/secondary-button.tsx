@@ -5,9 +5,9 @@ interface ComponentProps {
     onClick?: React.MouseEventHandler<HTMLButtonElement>
 }
 
-export const PrimaryButton: React.FC<ComponentProps> = ({children, onClick}) => {
+export const SecondaryButton: React.FC<ComponentProps> = ({children, onClick}) => {
     const Button = styled.button`
-    background-color: ${colors.primary};
+    background-color: ${colors.secondary};
     color: white;
     padding: 0.6rem 0.8rem;
     text-align: center;
@@ -18,7 +18,7 @@ export const PrimaryButton: React.FC<ComponentProps> = ({children, onClick}) => 
     width: 100%;
     // max-height: 1.5rem;
     &:hover {
-        background-color: #0185da;
+        background-color: ${colors.secondary_dark};
     }
     `
     

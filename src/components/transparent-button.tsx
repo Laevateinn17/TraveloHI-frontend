@@ -5,9 +5,9 @@ interface ComponentProps {
     onClick?: React.MouseEventHandler<HTMLButtonElement>
 }
 
-export const PrimaryButton: React.FC<ComponentProps> = ({children, onClick}) => {
+export const TransparentButton: React.FC<ComponentProps> = ({children, onClick}) => {
     const Button = styled.button`
-    background-color: ${colors.primary};
+    background-color: transparent;
     color: white;
     padding: 0.6rem 0.8rem;
     text-align: center;

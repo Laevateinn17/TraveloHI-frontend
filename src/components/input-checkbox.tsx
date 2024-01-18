@@ -11,7 +11,7 @@ export const InputCheckbox: React.FC<ComponentProps> = ({name, label, onChange, 
     const Label = styled.p`
         display: inline;
         font-size: 0.7rem;
-        margin-left: 5px;
+        margin-left: 3px;
     `
 
     const Container = styled.div`

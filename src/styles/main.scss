@@ -1,4 +1,13 @@
 
+$primary: #30A1EA;
+$secondary: #ff5e1f;
+$secondary-dark: #d9501a;
+
+$dark: #5F5F5F;
+$border: #cdd0d1;
+
+
+
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -49,7 +58,7 @@ a {
 }
 
 html {
-	font-size: 16px;
+	font-size: 18px;
 }
 
 body {
@@ -58,7 +67,6 @@ body {
 
 * {
 	box-sizing: border-box;
-	font-size: 10px;
 }
 
 button {
@@ -67,4 +75,16 @@ button {
 
 .mb-1 {
 	margin-bottom: 0.8rem;
+}
+
+.mb-2 {
+	margin-bottom: 1.2rem;
+}
+
+.absolute {
+	position: absolute;
+}
+
+.relative {
+	position: relative;
 }
