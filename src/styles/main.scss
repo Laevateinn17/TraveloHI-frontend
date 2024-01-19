@@ -1,5 +1,6 @@
 
 $primary: #30A1EA;
+$primary-darker: #1f608b;
 $secondary: #ff5e1f;
 $secondary-dark: #d9501a;
 
@@ -87,4 +88,16 @@ button {
 
 .relative {
 	position: relative;
+}
+
+.items-center {
+	align-items: center;
+}
+
+.flex {
+	display: flex;
+}
+
+.gap-3 {
+	gap: 5px;
 }

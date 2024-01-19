@@ -2,48 +2,59 @@ import image from "../assets/logo-1.png"
 import { Link, useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
 import { PrimaryButton } from "../components/primary-button";
+import { TransparentButton } from "../components/transparent-button";
+import { FaUser } from "react-icons/fa";
+import "../styles/main.scss"
+import { useState } from "react";
 
-    const NavbarContainer = styled.div`
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        max-width: 100%;
-        margin: 0;
-        padding: 0.5rem 0;
-        font-size: 1rem;
-        box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    `    
+const NavbarContainer = styled.div`
+    position: fixed;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    margin: 0;
+    padding: 0.5rem 0;
+    font-size: 1rem;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    z-index: 1;
+    background-color: white;
+`    
 
-    const NavbarIcon = styled.img`
-        max-width: 135px;
-    `
+const NavbarIcon = styled.img`
+    max-width: 135px;
+`
 
-    const NavbarItemsContainer = styled.ul`
-        display: flex;
-        gap: 20px;
-        align-items: center;
-    `
+const NavbarItemsContainer = styled.ul`
+    display: flex;
+    gap: 20px;
+    align-items: center;
+`
 
-    const LoginButton = styled.li`
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 3px;
 
-    `
+
 export const NavigationBar = () => {
     const navigate = useNavigate()
-    
     return (
-        <NavbarContainer>
+
+    <NavbarContainer>
             <div className="">
                 <Link to="/">
                     <NavbarIcon src={image} alt=""/>
                 </Link>
             </div>
             <NavbarItemsContainer>
-                <LoginButton><Link to={"/login"}>Log in</Link></LoginButton>
-                <li><PrimaryButton onClick={() => navigate("/register")}>Register</PrimaryButton></li>
+                <li>
+                    <Link to={"/login"}>
+                        <TransparentButton>
+                            <div className="flex gap-3">
+                                <FaUser size={14}/>
+                                <p>Log in</p>
+                            </div>
+                        </TransparentButton>
+                    </Link>
+                </li>
+                <li><Link to="/register"><PrimaryButton>Register</PrimaryButton></Link></li>
             </NavbarItemsContainer>
         </NavbarContainer>
     )

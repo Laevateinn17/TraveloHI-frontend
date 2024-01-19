@@ -3,12 +3,13 @@ import { colors } from "../defines/colors"
 interface ComponentProps {
     children: React.ReactNode
     onClick?: React.MouseEventHandler<HTMLButtonElement>
+    className?: string
 }
 
-export const TransparentButton: React.FC<ComponentProps> = ({children, onClick}) => {
+export const TransparentButton: React.FC<ComponentProps> = ({children, onClick, className}) => {
     const Button = styled.button`
     background-color: transparent;
-    color: white;
+    color: black;
     padding: 0.6rem 0.8rem;
     text-align: center;
     border-radius: 7px;
@@ -16,13 +17,14 @@ export const TransparentButton: React.FC<ComponentProps> = ({children, onClick})
     font-size: 0.8rem;
     font-weight: bold;
     width: 100%;
-    // max-height: 1.5rem;
+    box-sizing: border-box;
+    border: 1px solid black;
     &:hover {
-        background-color: #0185da;
+        background-color: rgba(0, 0, 0, 0.1);
     }
     `
     
     return (
-        <Button onClick={onClick}>{children}</Button>
+        <Button onClick={onClick} className={className}>{children}</Button>
     )
 }

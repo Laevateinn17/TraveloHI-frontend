@@ -17,9 +17,9 @@ export const MainTemplate: React.FC<DefaultProps> = ({children}) => {
     `
 
     const ChildrenTemplate = styled.div`
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
+        // flex-grow: 1;
+        // display: flex;
+        // flex-direction: column;
     `
     return (
         <Template className="">

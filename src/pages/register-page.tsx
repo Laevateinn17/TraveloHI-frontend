@@ -13,30 +13,27 @@ import { UserAuthData } from "../interfaces/user-auth-data";
 import { SecondaryButton } from "../components/secondary-button";
 
 
-    const NameInputContainer = styled.div`
-        display: flex;
-        gap: 5px;
-        margin-bottom: 0.8rem;
-    `
+const NameInputContainer = styled.div`
+    display: flex;
+    gap: 5px;
+    margin-bottom: 0.8rem;
+`
 
-    const ErrorMessage = styled.p`
-        font-size: 0.8rem;
-        color: red;
-        visibility: hidden;
-    `
-    
-    const Title = styled.p`
-        font-size: 1.4rem;
-        margin-bottom: 1.5rem;
-    `
+const ErrorMessage = styled.p`
+    font-size: 0.8rem;
+    color: red;
+    visibility: hidden;
+`
+
+const Title = styled.p`
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+`
 
 export const RegisterPage: React.FC<DefaultProps> = ({}) => {
     const [user, setUser] = useState<User>({isBanned: false} as User)
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [userAuth, setUserAuth] = useState<UserAuthData>({} as UserAuthData)
     const [confirmPassword, setConfirmPassword] = useState('')
-    const [securityQuestion, setSecurityQuestion] = useState<string>()
-    const [securityAnswer, setSecurityAnswer] = useState<string>()
     const errorRef = useRef<HTMLParagraphElement>(null!);
     
     
@@ -91,7 +88,7 @@ export const RegisterPage: React.FC<DefaultProps> = ({}) => {
     
 
     const checkEmail = () => {
-        if (!email || !isValidEmail(email)) {
+        if (!userAuth.email || !isValidEmail(userAuth.email)) {
             errorRef.current.innerText = 'Email must match the format \'[example]@[domain].com\''
             return false
         }
@@ -101,15 +98,15 @@ export const RegisterPage: React.FC<DefaultProps> = ({}) => {
 
 
     const checkPassword = () => {
-        if (password.length < 8 || password.length > 30) {
+        if (!userAuth.password || userAuth.password.length < 8 || userAuth.password.length > 30) {
             errorRef.current.innerText = 'Password length must be 8-30 characters'
             return false
         }
-        else if (!/^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]+$/.test(password)) {
+        else if (!/^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]+$/.test(userAuth.password)) {
             errorRef.current.innerText = 'Password must only contain letters, numbers, or common symbols'
             return false
         }
-        else if (password != confirmPassword) {
+        else if (userAuth.password != confirmPassword) {
             errorRef.current.innerText = 'Passwords do not match'
             return false
         }
@@ -118,11 +115,11 @@ export const RegisterPage: React.FC<DefaultProps> = ({}) => {
     }   
     
     const checkSecurityQuestion = () => {
-        if (!securityQuestion) {
+        if (!userAuth.securityQuestion) {
             errorRef.current.innerText = 'Select a security question'
             return false
         }
-        else if (!securityAnswer) {
+        else if (!userAuth.securityAnswer) {
             errorRef.current.innerText = 'Fill security question\'s answer'
             return false
         }
@@ -145,7 +142,7 @@ export const RegisterPage: React.FC<DefaultProps> = ({}) => {
         }
         errorRef.current.innerText = '[Error message]'
         errorRef.current.style.visibility = 'hidden'
-        await RegisterUser(user, {email: email, password: password, securityQuestion: securityQuestion, securityAnswer: securityAnswer} as UserAuthData)
+        await RegisterUser(user,  userAuth)
         
     }
 
@@ -154,15 +151,16 @@ export const RegisterPage: React.FC<DefaultProps> = ({}) => {
         let value: string | boolean = evt.target.value
         if (evt.target.name === "dateOfBirth") value = new Date(value).toISOString()
         else if(evt.target.name === 'isSubscriber') value = (evt.target as HTMLInputElement).checked
-        setUser({...user, [evt.target.name]: value})
+
+        if (['email', 'password', 'securityQuestion', 'securityAnswer'].includes(evt.target.name)) setUserAuth({...userAuth, [evt.target.name]: value})
+        else setUser({...user, [evt.target.name]: value})
     }
 
 
     
     
     return (
-    <div className="empty-container">
-        <div className="center-items">
+        <div className="empty-container center-items">
             <div className="form-container">
                 <Title>Create an account</Title>
                 <form action="" method="POST" onSubmit={handleSubmit}>
@@ -189,7 +187,7 @@ export const RegisterPage: React.FC<DefaultProps> = ({}) => {
                         type="text"/>
                     </NameInputContainer>
                     <div className="mb-1">
-                        <InputField type="date" name="dateOfBirth" label="Birth date" onChange={handleOnChange}/>
+                        <InputField type="datetime" name="dateOfBirth" label="Birth date" onChange={handleOnChange}/>
                     </div>
                     <div className="mb-1">
                         <InputSelect onChange={handleOnChange} label="Gender" name="gender" placeholder="Input your gender">   
@@ -201,14 +199,14 @@ export const RegisterPage: React.FC<DefaultProps> = ({}) => {
                         label="Email"
                         placeholder="Example: yourname@example.com"
                         name="email"
-                        onChange={e => setEmail(e.target.value)}/>
+                        onChange={handleOnChange}/>
                     </div>
                     <div className="mb-1">
                         <InputField
                         label="Password"
                         placeholder="**********" 
                         name="password"
-                        onChange={e => setPassword(e.target.value)}
+                        onChange={handleOnChange}
                         type="password"/>
                     </div>
                     <div className="mb-1">
@@ -220,12 +218,12 @@ export const RegisterPage: React.FC<DefaultProps> = ({}) => {
                         type="password"/>
                     </div>
                     <div className="mb-1">
-                        <InputSelect label="Security question" onChange={e => setSecurityQuestion(e.target.value)} name="securityQuestion" placeholder="Select a security question">
+                        <InputSelect label="Security question" onChange={handleOnChange} name="securityQuestion" placeholder="Select a security question">
                             {Object.keys(SecurityQuestion).map(key => <option key={key} value={key}>{(SecurityQuestion as any)[key]}</option>)}
                         </InputSelect>
                     </div>
                     <div className="mb-1">
-                        <InputField label="Answer" onChange={e => setSecurityAnswer(e.target.value)} placeholder="Answer for the security question" name="securityAnswer"/>
+                        <InputField label="Answer" onChange={handleOnChange} placeholder="Answer for the security question" name="securityAnswer"/>
                     </div>
                     <div className="mb-1">
                         <InputCheckbox onChange={handleOnChange} label="Subscribe to our newsletter service" name="isSubscriber" checked={user.isSubscriber}/>
@@ -237,6 +235,5 @@ export const RegisterPage: React.FC<DefaultProps> = ({}) => {
                 </form>
             </div>
         </div>
-    </div>
     )
 }
