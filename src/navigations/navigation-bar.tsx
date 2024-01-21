@@ -5,7 +5,9 @@ import { PrimaryButton } from "../components/primary-button";
 import { TransparentButton } from "../components/transparent-button";
 import { FaUser } from "react-icons/fa";
 import "../styles/main.scss"
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { GetAuthContext } from "../contexts/AuthContext";
+import { User } from "../interfaces/user";
 
 const NavbarContainer = styled.div`
     position: fixed;
@@ -34,9 +36,9 @@ const NavbarItemsContainer = styled.ul`
 
 
 export const NavigationBar = () => {
-    const navigate = useNavigate()
-    return (
+    const {user} = GetAuthContext()
 
+    return (
     <NavbarContainer>
             <div className="">
                 <Link to="/">
@@ -44,17 +46,25 @@ export const NavigationBar = () => {
                 </Link>
             </div>
             <NavbarItemsContainer>
-                <li>
-                    <Link to={"/login"}>
-                        <TransparentButton>
-                            <div className="flex gap-3">
-                                <FaUser size={14}/>
-                                <p>Log in</p>
-                            </div>
-                        </TransparentButton>
-                    </Link>
-                </li>
-                <li><Link to="/register"><PrimaryButton>Register</PrimaryButton></Link></li>
+                {user != undefined ?( 
+                    <>
+                        <li><Link to="/logout">Logout</Link></li>
+                    </>
+                ) : (
+                    <>
+                        <li>
+                        <Link to="/login">
+                            <TransparentButton>
+                                <div className="flex gap-3">
+                                    <FaUser size={14}/>
+                                    <p>Log in</p>
+                                </div>
+                            </TransparentButton>
+                        </Link>
+                        </li>
+                        <li><Link to="/register"><PrimaryButton>Register</PrimaryButton></Link></li>
+                    </>
+                )}
             </NavbarItemsContainer>
         </NavbarContainer>
     )

@@ -7,6 +7,8 @@ import { SecondaryButton } from "../components/secondary-button"
 import { isValidEmail } from "../libs/utils"
 import { Login } from "../controllers/user-controller"
 import { HttpStatusCode } from "axios"
+import { useNavigate } from "react-router-dom"
+import { GetAuthContext } from "../contexts/AuthContext"
 
  
 const Title = styled.p`
@@ -22,8 +24,8 @@ const ErrorMessage = styled.p`
 export const LoginPage = () => {
     const [userAuth, setUserAuth] = useState<UserAuthData>({} as UserAuthData)
     const errorRef = useRef<HTMLParagraphElement>(null!)
-
-    
+    const navigate = useNavigate()
+    const {refreshPage} = GetAuthContext()
     const handleOnChange = (evt: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         let value: string | boolean = evt.target.value
         setUserAuth({...userAuth, [evt.target.name]: value})
@@ -62,14 +64,13 @@ export const LoginPage = () => {
         const status = await Login(userAuth)
 
         if (status == HttpStatusCode.BadRequest) {
-            console.log('stsetsets')
             errorRef.current.innerText = 'Wrong email or password'
             errorRef.current.style.visibility = 'visible'
+            return
         }
-        else {
-            errorRef.current.innerText = '[Error message]'
-            errorRef.current.style.visibility = 'hidden'
-        }
+
+        navigate("/")
+        refreshPage()
     }
 
     return (
