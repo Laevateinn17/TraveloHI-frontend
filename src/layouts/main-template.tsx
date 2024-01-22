@@ -1,6 +1,9 @@
 import styled from "@emotion/styled";
 import { DefaultProps } from "../interfaces/default-props";
 import { NavigationBar } from "../navigations/navigation-bar";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { GetAuthContext } from "../contexts/AuthContext";
 
 
 export const MainTemplate: React.FC<DefaultProps> = ({children}) => {
@@ -21,6 +24,8 @@ export const MainTemplate: React.FC<DefaultProps> = ({children}) => {
         // display: flex;
         // flex-direction: column;
     `
+    
+
     return (
         <Template className="">
             <InnerTemplate>

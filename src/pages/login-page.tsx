@@ -5,7 +5,6 @@ import "../styles/components.scss"
 import styled from "@emotion/styled"
 import { SecondaryButton } from "../components/secondary-button"
 import { isValidEmail } from "../libs/utils"
-import { Login } from "../controllers/user-controller"
 import { HttpStatusCode } from "axios"
 import { useNavigate } from "react-router-dom"
 import { GetAuthContext } from "../contexts/AuthContext"
@@ -22,10 +21,11 @@ const ErrorMessage = styled.p`
     visibility: hidden;
 `
 export const LoginPage = () => {
+    const {Login} = GetAuthContext()
+    
     const [userAuth, setUserAuth] = useState<UserAuthData>({} as UserAuthData)
     const errorRef = useRef<HTMLParagraphElement>(null!)
     const navigate = useNavigate()
-    const {refreshPage} = GetAuthContext()
     const handleOnChange = (evt: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         let value: string | boolean = evt.target.value
         setUserAuth({...userAuth, [evt.target.name]: value})
@@ -70,7 +70,6 @@ export const LoginPage = () => {
         }
 
         navigate("/")
-        refreshPage()
     }
 
     return (

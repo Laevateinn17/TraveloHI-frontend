@@ -8,9 +8,9 @@ import { SecurityQuestion } from "../enums/SecurityQuestion";
 import { InputCheckbox } from "../components/input-checkbox";
 import { User } from "../interfaces/user";
 import { hasNumber, hasSymbol, isValidEmail } from "../libs/utils";
-import { RegisterUser } from "../controllers/user-controller";
 import { UserAuthData } from "../interfaces/user-auth-data";
 import { SecondaryButton } from "../components/secondary-button";
+import { GetAuthContext } from "../contexts/AuthContext";
 
 
 const NameInputContainer = styled.div`
@@ -31,6 +31,8 @@ const Title = styled.p`
 `
 
 export const RegisterPage: React.FC<DefaultProps> = ({}) => {
+    const { RegisterUser } = GetAuthContext()
+    
     const [user, setUser] = useState<User>({isBanned: false} as User)
     const [userAuth, setUserAuth] = useState<UserAuthData>({} as UserAuthData)
     const [confirmPassword, setConfirmPassword] = useState('')
