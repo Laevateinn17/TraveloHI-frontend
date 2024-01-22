@@ -18,7 +18,7 @@ export const TransparentButton: React.FC<ComponentProps> = ({children, onClick, 
     font-weight: bold;
     width: 100%;
     box-sizing: border-box;
-    border: 1px solid black;
+    border: 1px solid ${colors.border};
     &:hover {
         background-color: rgba(0, 0, 0, 0.1);
     }

@@ -1,6 +1,6 @@
 
 $primary: #30A1EA;
-$primary-darker: #1f608b;
+$primary-darker: #0185da;
 $secondary: #ff5e1f;
 $secondary-dark: #d9501a;
 
@@ -94,10 +94,19 @@ button {
 	align-items: center;
 }
 
+.text-center {
+	text-align: center;
+}
+
+
 .flex {
 	display: flex;
 }
 
 .gap-3 {
 	gap: 5px;
+}
+
+.text-sm {
+	font-size: 0.8rem;
 }
