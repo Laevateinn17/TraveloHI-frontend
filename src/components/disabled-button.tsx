@@ -12,13 +12,13 @@ export const DisabledButton: React.FC<ComponentProps> = ({children, onClick}) =>
     padding: 0.6rem 0.8rem;
     text-align: center;
     border-radius: 7px;
-    cursor: pointer;
+    cursor: default;
     font-size: 0.8rem;
     font-weight: bold;
     width: 100%;
     // max-height: 1.5rem;
     &:hover {
-        background-color: #f2f3f3;
+        // background-color: #f2f3f3;
     }
     `
     

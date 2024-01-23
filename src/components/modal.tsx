@@ -1,15 +1,9 @@
 import styled from "@emotion/styled"
-import { DefaultProps } from "../interfaces/default-props"
-import { IoMdClose } from "react-icons/io"
 import { TfiClose } from "react-icons/tfi"
 
-const Title = styled.p`
-    font-size: 1.4rem;
-    margin-bottom: 1.5rem;
-`
 const ModalContainer = styled.div`
     position: fixed;
-    top: 0;
+    // top: 0;
     left: 0;
     width: 100%;
     height: 100%;
@@ -17,7 +11,7 @@ const ModalContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: all 3s;
+    transition: all 0.3s;
 `
 
 const ModalItem = styled.div`
@@ -28,6 +22,9 @@ const ModalItem = styled.div`
     position: relative;
     max-width: 400px;
     width: 100%;
+    top: 100vh;
+    transition: all 0.3s;
+    // display: none;
 `
 
 const CloseButton = styled.div`
@@ -39,14 +36,16 @@ const CloseButton = styled.div`
 interface ComponentProps {
     children?: React.ReactNode
     onModalClose: CallableFunction
+    show: boolean
 }
 
 
-export const Modal: React.FC<ComponentProps> = ({children, onModalClose}) => {
 
+
+export const Modal: React.FC<ComponentProps> = ({children, onModalClose, show=false}) => {
     return (
-        <ModalContainer>
-            <ModalItem>
+        <ModalContainer style={{visibility: show ? "visible" : "hidden"}}>
+            <ModalItem className={show ? "modal-active" : ""}>
                 <CloseButton onClick={() => onModalClose()}><TfiClose/></CloseButton>
                 {children}
             </ModalItem>

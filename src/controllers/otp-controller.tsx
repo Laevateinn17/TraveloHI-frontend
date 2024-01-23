@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios, { HttpStatusCode } from "axios"
 import { BACKEND_SERVER } from "../defines/connections"
 import { OTP } from "../interfaces/otp"
 
@@ -16,6 +16,5 @@ export const VerifyOTP = async (otp: OTP) => {
     const url = `${BACKEND_SERVER}/check-otp`
     const response = await axios.post(url, otp)
 
-    console.log(response)
-
+    return response.status == HttpStatusCode.Ok ? true : false
 }

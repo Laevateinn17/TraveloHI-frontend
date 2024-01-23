@@ -11,10 +11,8 @@ import { GetAuthContext } from "../contexts/AuthContext"
 import { TransparentButton } from "../components/transparent-button"
 import { colors } from "../defines/colors"
 import { PrimaryButton } from "../components/primary-button"
-import { RequestOTP, VerifyOTP } from "../controllers/otp-controller"
 import { Modal } from "../components/modal"
-import { DisabledButton } from "../components/disabled-button"
-import { OTP } from "../interfaces/otp"
+import { OTPVerification } from "../components/modals/OTPVerification"
 
  
 const Title = styled.p`
@@ -67,18 +65,16 @@ const ForgotPasswordButton = styled.button`
     }
 `
 
-const VerificationContainer = styled.div`
-    p {
-        font-size: 0.8rem;
-        font-weight: bold;
-        text-align: center;
-    }
 
-    input[type=text] {
-        width: 100%
-    }
+const FormContent2 = styled.div`
+  position: absolute;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  right: -(500px)
 `
-
 
 export const LoginPage = () => {
     const {Login} = GetAuthContext()
@@ -88,12 +84,19 @@ export const LoginPage = () => {
     const [userAuth, setUserAuth] = useState<UserAuthData>({} as UserAuthData)
 
     const [showModal, setShowModal] = useState(false)
+    const [changePassword, setChangePassword] = useState(false)
 
-    const [otp, setOtp] = useState<OTP>()
-    
-    const [otpInput, setOtpInput] = useState('')
+    const [newPassword, setNewPassword] = useState('')
+    const [confirmNewPassword, setConfirmNewPassword] = useState('')
+
     
     const errorRef = useRef<HTMLParagraphElement>(null!)
+    const errorRef2 = useRef<HTMLParagraphElement>(null!)
+
+    useEffect(() => {
+        setShowModal(false)
+    }, [changePassword])
+
     const handleOnChange = (evt: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         let value: string | boolean = evt.target.value
         setUserAuth({...userAuth, [evt.target.name]: value})
@@ -121,6 +124,8 @@ export const LoginPage = () => {
         errorRef.current.innerText = ''
         return true
     }   
+
+
     const handleSubmit = async (evt: FormEvent<HTMLFormElement>) => {
         evt.preventDefault()
         if (!checkEmail() || !checkPassword()){
@@ -141,77 +146,119 @@ export const LoginPage = () => {
         navigate("/")
     }
 
-    const HandleVerifyOTP = async () => {
-        await VerifyOTP({email: userAuth.email, code: otpInput} as OTP)
+    const handleChangePassword = async () => {   
+        if (!newPassword || newPassword.length < 8 || newPassword.length > 30) {
+            errorRef2.current.style.visibility = 'visible'
+            errorRef2.current.innerText = 'Password length must be 8-30 characters'
+            return
+        }
+        else if (!/^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]+$/.test(newPassword)) {
+            errorRef2.current.style.visibility = 'visible'
+            errorRef2.current.innerText = 'Password must only contain letters, numbers, or common symbols'
+            return
+        }
+        else if (newPassword != confirmNewPassword) {
+            errorRef2.current.style.visibility = 'visible'
+            errorRef2.current.innerText = 'Passwords do not match'
+            return
+        }
+        errorRef2.current.innerText = '[Error message]'
+        errorRef2.current.style.visibility = 'hidden'
+
+        
     }
+
+    const HandleForgotPassword = () => {
+        setShowModal(true)
+    }
+
 
     return (
         <div className="empty-container center-items">
             <div className="form-container">
-                <Title>Sign in</Title>
-                <form action="" method="POST" onSubmit={handleSubmit}>
-                    <div className="mb-1">
-                        <InputField
-                        label="Email"
-                        name="email"
-                        placeholder="Example: yourname@email.com"
-                        onChange={handleOnChange}
-                        />
+                {!changePassword && <div>
+                    <Title>Sign in</Title>
+                    <form action="" method="POST" onSubmit={handleSubmit}>
+                        <div className="mb-1">
+                            <InputField
+                            label="Email"
+                            name="email"
+                            placeholder="Example: yourname@email.com"
+                            onChange={handleOnChange}
+                            />
+                        </div>
+                        <div className="mb-1">
+                            <InputField 
+                            label="Password"
+                            name="password"
+                            type="password"
+                            placeholder="********"
+                            onChange={handleOnChange}
+                            />
+                        </div>
+                        <div className="mb-1">
+                            <ErrorMessage ref={errorRef}>[Error message]</ErrorMessage>
+                        </div>
+                        <div className="mb-2">
+                            <SecondaryButton >Log In</SecondaryButton>
+                        </div>
+                    </form>
+                    <div>
+                        <BorderContainer>
+                            <Border></Border>
+                            <Text>or log in/register with</Text>
+                        </BorderContainer>
+                        <div className="mb-1">
+                            <TransparentButton onClick={() => {
+                                
+                            }}>Login with OTP</TransparentButton>
+                        </div>
+                        <div className="mb-1">
+                            <PrimaryButton onClick={() => navigate("/register")}>Register</PrimaryButton>
+                        </div>
+                        <div className="text-center">
+                            <ForgotPasswordButton onClick={HandleForgotPassword}>Forgot Password?</ForgotPasswordButton>
+                        </div>
                     </div>
-                    <div className="mb-1">
-                        <InputField 
-                        label="Password"
-                        name="password"
-                        type="password"
-                        placeholder="********"
-                        onChange={handleOnChange}
-                        />
-                    </div>
-                    <div className="mb-1">
-                        <ErrorMessage ref={errorRef}>[Error message]</ErrorMessage>
-                    </div>
-                    <div className="mb-2">
-                        <SecondaryButton >Log In</SecondaryButton>
-                    </div>
-                </form>
-                <div>
-                    <BorderContainer>
-                        <Border></Border>
-                        <Text>or log in/register with</Text>
-                    </BorderContainer>
-                    <div className="mb-1">
-                        <TransparentButton onClick={() => {
-                            
-                        }}>Login with OTP</TransparentButton>
-                    </div>
-                    <div className="mb-1">
-                        <PrimaryButton onClick={() => navigate("/register")}>Register</PrimaryButton>
-                    </div>
-                    <div className="text-center">
-                        <ForgotPasswordButton onClick={async () => {
-                            const otp = await RequestOTP(userAuth.email)
-                            setOtp(otp)
-                            console.log((new Date(otp.expiresAt).getTime() - new Date().getTime()))
-                            setShowModal(true)
-                        }}>Forgot Password?</ForgotPasswordButton>
-                    </div>
-                </div>
+                </div>}
+                {changePassword && <div>
+                    <Title>Change Password</Title>
+                    <form action="" method="POST" onSubmit={handleSubmit}>
+                        <div className="mb-1">
+                            <InputField
+                            label="New Password"
+                            name="newPassword"
+                            type="password"
+                            placeholder="********"
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            />
+                        </div>
+                        <div className="mb-1">
+                            <InputField 
+                            label="Confirm New Password"
+                            name="confirmNewPassword"
+                            type="password"
+                            placeholder="********"
+                            onChange={(e) => setConfirmNewPassword(e.target.value)}
+                            />
+                        </div>
+                        <div className="mb-1">
+                            <ErrorMessage ref={errorRef2}>[Error message]</ErrorMessage>
+                        </div>
+                        <div className="mb-2">
+                            <SecondaryButton onClick={handleChangePassword}>Change password</SecondaryButton>
+                        </div>
+                    </form>
+                </div>}
             </div>
-            {showModal && 
-            <Modal onModalClose={() => setShowModal(false)}>
-                <Title>Input Verification Code</Title>
-                <p className="text-sm mb-1">To verify your account, you need to confirm your Traveloka account. Please input the verification code that we sent to you:</p>
-                <VerificationContainer className="mb-1">
-                    <p className="mb-1">Verification Code</p>
-                    <input type="text" onChange={e => setOtpInput(e.target.value)}/>
-                </VerificationContainer>
-                    <div className="mb-1">
-                        <DisabledButton>Resend verification code</DisabledButton>
-                    </div>
-                    <div className="mb-1">
-                        <PrimaryButton onClick={HandleVerifyOTP}>Verify</PrimaryButton>
-                    </div>
-            </Modal>}
+            <Modal 
+            onModalClose={() => {
+                setShowModal(false)
+            }}
+            show={showModal}
+            >
+                {showModal && <OTPVerification email={userAuth.email} onVerify={(bool: boolean) => setChangePassword(bool)}/>}
+            </Modal>
         </div>
     )
 }

@@ -28,6 +28,7 @@ export const MainTemplate: React.FC<DefaultProps> = ({children}) => {
 
     return (
         <Template className="">
+            
             <InnerTemplate>
                 <NavigationBar/>
                 <ChildrenTemplate>
