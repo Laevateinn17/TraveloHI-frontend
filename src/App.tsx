@@ -6,6 +6,7 @@ import { RegisterPage } from "./pages/register-page";
 import { LoginPage } from "./pages/login-page";
 import { AuthProvider } from "./contexts/AuthContext";
 import { LogoutPage } from "./pages/logout-page";
+import { ForgotPasswordPage } from "./pages/forgot-password-page";
 function App() {
   return (
     <BrowserRouter>
@@ -16,6 +17,7 @@ function App() {
             <Route path="/register" element={<RegisterPage/>}/>
             <Route path="/login" element={<LoginPage/>} />
             <Route path="/logout" element={<LogoutPage/>}/>
+            <Route path="/forgot-password" element={<ForgotPasswordPage/>}/>
           </Routes>
         </MainTemplate>
     </AuthProvider>

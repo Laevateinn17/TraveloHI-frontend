@@ -15,16 +15,7 @@ import { Modal } from "../components/modal"
 import { OTPVerification } from "../components/modals/OTPVerification"
 
  
-const Title = styled.p`
-    font-size: 1.4rem;
-    margin-bottom: 1.5rem;
-`
 
-const ErrorMessage = styled.p`
-    font-size: 0.8rem;
-    color: red;
-    visibility: hidden;
-`
 const Border = styled.div`
     position: absolute;
     width: 100%;
@@ -86,12 +77,9 @@ export const LoginPage = () => {
     const [showModal, setShowModal] = useState(false)
     const [changePassword, setChangePassword] = useState(false)
 
-    const [newPassword, setNewPassword] = useState('')
-    const [confirmNewPassword, setConfirmNewPassword] = useState('')
 
     
     const errorRef = useRef<HTMLParagraphElement>(null!)
-    const errorRef2 = useRef<HTMLParagraphElement>(null!)
 
     useEffect(() => {
         setShowModal(false)
@@ -146,27 +134,6 @@ export const LoginPage = () => {
         navigate("/")
     }
 
-    const handleChangePassword = async () => {   
-        if (!newPassword || newPassword.length < 8 || newPassword.length > 30) {
-            errorRef2.current.style.visibility = 'visible'
-            errorRef2.current.innerText = 'Password length must be 8-30 characters'
-            return
-        }
-        else if (!/^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]+$/.test(newPassword)) {
-            errorRef2.current.style.visibility = 'visible'
-            errorRef2.current.innerText = 'Password must only contain letters, numbers, or common symbols'
-            return
-        }
-        else if (newPassword != confirmNewPassword) {
-            errorRef2.current.style.visibility = 'visible'
-            errorRef2.current.innerText = 'Passwords do not match'
-            return
-        }
-        errorRef2.current.innerText = '[Error message]'
-        errorRef2.current.style.visibility = 'hidden'
-
-        
-    }
 
     const HandleForgotPassword = () => {
         setShowModal(true)
@@ -177,7 +144,7 @@ export const LoginPage = () => {
         <div className="empty-container center-items">
             <div className="form-container">
                 {!changePassword && <div>
-                    <Title>Sign in</Title>
+                    <p className="title">Sign in</p>
                     <form action="" method="POST" onSubmit={handleSubmit}>
                         <div className="mb-1">
                             <InputField
@@ -197,7 +164,7 @@ export const LoginPage = () => {
                             />
                         </div>
                         <div className="mb-1">
-                            <ErrorMessage ref={errorRef}>[Error message]</ErrorMessage>
+                            <p className="error-message" ref={errorRef}>[Error message]</p>
                         </div>
                         <div className="mb-2">
                             <SecondaryButton >Log In</SecondaryButton>
@@ -217,38 +184,9 @@ export const LoginPage = () => {
                             <PrimaryButton onClick={() => navigate("/register")}>Register</PrimaryButton>
                         </div>
                         <div className="text-center">
-                            <ForgotPasswordButton onClick={HandleForgotPassword}>Forgot Password?</ForgotPasswordButton>
+                            <ForgotPasswordButton onClick={() => navigate("/forgot-password")}>Forgot Password?</ForgotPasswordButton>
                         </div>
                     </div>
-                </div>}
-                {changePassword && <div>
-                    <Title>Change Password</Title>
-                    <form action="" method="POST" onSubmit={handleSubmit}>
-                        <div className="mb-1">
-                            <InputField
-                            label="New Password"
-                            name="newPassword"
-                            type="password"
-                            placeholder="********"
-                            onChange={(e) => setNewPassword(e.target.value)}
-                            />
-                        </div>
-                        <div className="mb-1">
-                            <InputField 
-                            label="Confirm New Password"
-                            name="confirmNewPassword"
-                            type="password"
-                            placeholder="********"
-                            onChange={(e) => setConfirmNewPassword(e.target.value)}
-                            />
-                        </div>
-                        <div className="mb-1">
-                            <ErrorMessage ref={errorRef2}>[Error message]</ErrorMessage>
-                        </div>
-                        <div className="mb-2">
-                            <SecondaryButton onClick={handleChangePassword}>Change password</SecondaryButton>
-                        </div>
-                    </form>
                 </div>}
             </div>
             <Modal 
