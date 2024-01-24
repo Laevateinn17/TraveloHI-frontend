@@ -1,7 +1,7 @@
 import axios, { HttpStatusCode } from "axios"
 import { UserAuthData } from "../interfaces/user-auth-data"
 import { BACKEND_SERVER } from "../defines/connections"
-
+import { AxiosResponse } from "axios"
 
 export const GetSecurityQuestion = async (userAuth: UserAuthData) => {
     const url = `${BACKEND_SERVER}/security-question`
@@ -30,14 +30,15 @@ export const VerifySecurityAnswer = async (userAuth: UserAuthData) => {
     }
 }
 
-export const ChangePassword = async (userAuth: UserAuthData) => {
+export const ChangePassword = async (userAuth: UserAuthData)  => {
     const url = `${BACKEND_SERVER}/change-password`
     try {
         const response = await axios.post(url, userAuth)
-        console.log(response)
-        return response.status == HttpStatusCode.Ok
+        return response
     }
     catch (exception) {
-        return false
+        if (axios.isAxiosError(exception)) {
+            return exception.response
+        }
     }
 }

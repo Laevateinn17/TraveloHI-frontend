@@ -44,7 +44,6 @@ export const AuthProvider: React.FC<DefaultProps> = ({children}) => {
     const [user, setUser] = useState<User>()
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const location = useLocation()
-
     useEffect(() => {
         if (isAuthenticated) {
             FetchUser().then(user => {
@@ -141,7 +140,6 @@ export const AuthProvider: React.FC<DefaultProps> = ({children}) => {
             return response.data as User
         }
         catch (exception) {
-            console.log(exception)
         }
 
         return undefined

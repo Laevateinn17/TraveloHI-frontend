@@ -13,6 +13,7 @@ import { SecondaryButton } from "../components/secondary-button";
 import { GetAuthContext } from "../contexts/AuthContext";
 import ReCAPTCHA from "react-google-recaptcha"
 import { useNavigate } from "react-router-dom";
+import { UserRole } from "../enums/user-role";
 
 
 const NameInputContainer = styled.div`
@@ -37,7 +38,7 @@ export const RegisterPage: React.FC<DefaultProps> = ({}) => {
 
     const navigate = useNavigate()
     
-    const [user, setUser] = useState<User>({isSubscriber: false} as User)
+    const [user, setUser] = useState<User>({isSubscriber: false, role: UserRole.Customer} as User)
     const [userAuth, setUserAuth] = useState<UserAuthData>({isBanned: false} as UserAuthData)
     const [confirmPassword, setConfirmPassword] = useState('')
 
@@ -51,7 +52,7 @@ export const RegisterPage: React.FC<DefaultProps> = ({}) => {
     }, [])
 
     const checkFirstName = () => {
-        if (!user.firstName || user.firstName.length <= 5) {
+        if (!user.firstName || user.firstName.length < 5) {
             errorRef.current.innerText = 'First name must be at least 5 characters'
             return false
         }

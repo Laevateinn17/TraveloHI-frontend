@@ -25,7 +25,7 @@ export const MainTemplate: React.FC<DefaultProps> = ({children}) => {
         // display: flex;
         // flex-direction: column;
     `
-    
+    console.log('tes')
 
     return (
         <Template className="">

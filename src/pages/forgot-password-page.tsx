@@ -1,12 +1,11 @@
-import styled from "@emotion/styled"
 import { FormEvent, useRef, useState } from "react"
 import { SecondaryButton } from "../components/secondary-button"
 import { InputField } from "../components/input-field"
 import { UserAuthData } from "../interfaces/user-auth-data"
-import { PrimaryButton } from "../components/primary-button"
 import { ChangePassword, GetSecurityQuestion, VerifySecurityAnswer } from "../controllers/user-controller"
 import { SecurityQuestion } from "../enums/SecurityQuestion"
 import { useNavigate } from "react-router-dom"
+import { HttpStatusCode } from "axios"
 
 
 
@@ -46,8 +45,14 @@ export const ForgotPasswordPage = () => {
 
         userAuth.password = newPassword
         const response = await ChangePassword(userAuth)
-        if (response) {
+        if (response?.status == HttpStatusCode.Ok) {
+            errorRef.current.innerText = '[Error message]'
+            errorRef.current.style.visibility = 'hidden'
             navigate("/login")
+        }
+        else if (response?.data['error'] == "new password is the same as old one") {
+            errorRef.current.innerText = 'New password can\'t be the same as old one.'
+            errorRef.current.style.visibility = 'visible'
         }
     }
 

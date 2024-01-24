@@ -40,7 +40,7 @@ const SecondNavbarContainer = styled.div`
     font-size: 0.8rem;
     justify-content: space-between;
     padding: 0.5rem 10vw;
-
+    background-color: white;
     border-bottom: 1px solid rgba(104,113,118,0.25);
 `
 
