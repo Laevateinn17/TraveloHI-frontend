@@ -11,6 +11,8 @@ import { hasNumber, hasSymbol, isValidEmail } from "../libs/utils";
 import { UserAuthData } from "../interfaces/user-auth-data";
 import { SecondaryButton } from "../components/secondary-button";
 import { GetAuthContext } from "../contexts/AuthContext";
+import ReCAPTCHA from "react-google-recaptcha"
+import { useNavigate } from "react-router-dom";
 
 
 const NameInputContainer = styled.div`
@@ -32,12 +34,16 @@ const Title = styled.p`
 
 export const RegisterPage: React.FC<DefaultProps> = ({}) => {
     const { RegisterUser } = GetAuthContext()
+
+    const navigate = useNavigate()
     
-    const [user, setUser] = useState<User>({isBanned: false} as User)
-    const [userAuth, setUserAuth] = useState<UserAuthData>({} as UserAuthData)
+    const [user, setUser] = useState<User>({isSubscriber: false} as User)
+    const [userAuth, setUserAuth] = useState<UserAuthData>({isBanned: false} as UserAuthData)
     const [confirmPassword, setConfirmPassword] = useState('')
+
     const errorRef = useRef<HTMLParagraphElement>(null!);
-    
+    const reCaptchaRef = useRef(null)
+    const [captcha, setCaptcha] = useState<string | null>(null)
     
 
     useEffect(() => {
@@ -129,6 +135,15 @@ export const RegisterPage: React.FC<DefaultProps> = ({}) => {
         return true
     }
 
+    const checkCaptcha = () => {
+        if (captcha == null || captcha == '') {
+            errorRef.current.innerText = 'Complete the captcha'
+            return false
+        }
+        errorRef.current.innerText = ''
+        return true
+    }
+
     const handleSubmit = async (evt : FormEvent<HTMLFormElement>) => {
         evt.preventDefault()
         
@@ -138,14 +153,21 @@ export const RegisterPage: React.FC<DefaultProps> = ({}) => {
         !checkGender() || 
         !checkEmail() || 
         !checkPassword() ||
-        !checkSecurityQuestion()) {
+        !checkSecurityQuestion() ||
+        !checkCaptcha()) {
             errorRef.current.style.visibility = 'visible'
             return
         }
         errorRef.current.innerText = '[Error message]'
         errorRef.current.style.visibility = 'hidden'
-        await RegisterUser(user,  userAuth)
-        
+        const response = await RegisterUser(user,  userAuth, captcha)
+
+        if (response == "email is already used") {
+            errorRef.current.innerText = 'Email is already used'
+            errorRef.current.style.visibility = 'visible'
+            return
+        }
+        navigate('/login')
     }
 
 
@@ -189,7 +211,7 @@ export const RegisterPage: React.FC<DefaultProps> = ({}) => {
                         type="text"/>
                     </NameInputContainer>
                     <div className="mb-1">
-                        <InputField type="datetime" name="dateOfBirth" label="Birth date" onChange={handleOnChange}/>
+                        <InputField type="date" name="dateOfBirth" label="Birth date" onChange={handleOnChange}/>
                     </div>
                     <div className="mb-1">
                         <InputSelect onChange={handleOnChange} label="Gender" name="gender" placeholder="Input your gender">   
@@ -229,6 +251,9 @@ export const RegisterPage: React.FC<DefaultProps> = ({}) => {
                     </div>
                     <div className="mb-1">
                         <InputCheckbox onChange={handleOnChange} label="Subscribe to our newsletter service" name="isSubscriber" checked={user.isSubscriber}/>
+                    </div>
+                    <div className="mb-1">
+                        <ReCAPTCHA className="g-recaptcha" sitekey="6LehlFopAAAAAN7Kr_LO9IoWv2Gohy19lyuweBcA" ref={reCaptchaRef} onChange={value => setCaptcha(value)}/>
                     </div>
                     <div className="mb-1">
                         <ErrorMessage ref={errorRef}>[Error message]</ErrorMessage>

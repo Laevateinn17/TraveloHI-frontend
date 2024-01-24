@@ -7,7 +7,6 @@ export interface User {
     gender: string
     dateOfBirth: string
     profilePictureURL: string
-    isBanned: boolean
     role: string
     isSubscriber: boolean
 }

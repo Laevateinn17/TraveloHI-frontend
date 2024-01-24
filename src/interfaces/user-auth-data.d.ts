@@ -5,4 +5,5 @@ export interface UserAuthData {
     password: string
     securityQuestion: string
     securityAnswer: string
+    isBanned: boolean
 }

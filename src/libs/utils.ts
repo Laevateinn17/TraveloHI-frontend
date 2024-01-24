@@ -8,5 +8,5 @@ export const hasNumber = (str: string) => {
 }
 
 export const isValidEmail = (str: string) => {
-    return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(str);
 }

@@ -17,6 +17,7 @@ export const MainTemplate: React.FC<DefaultProps> = ({children}) => {
     flex-direction: column;
     width: 100%;
     min-height: 100vh;
+    max-width: 100vw;
     `
 
     const ChildrenTemplate = styled.div`

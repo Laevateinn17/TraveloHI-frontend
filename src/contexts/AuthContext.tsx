@@ -13,6 +13,7 @@ export interface AuthContextType {
     isAuthenticated: boolean
     RegisterUser: CallableFunction
     Login: CallableFunction
+    LoginByEmail: CallableFunction
     FetchUser: CallableFunction
     Logout: CallableFunction
 }
@@ -68,21 +69,50 @@ export const AuthProvider: React.FC<DefaultProps> = ({children}) => {
     }, [document.cookie])
     
 
-    const RegisterUser = async (user: User, userAuth: UserAuthData) => {
+    const RegisterUser = async (user: User, userAuth: UserAuthData, captcha: string) => {
         const url = `${BACKEND_SERVER}/register`
 
         const data = {
             user: user,
-            userAuth: userAuth
+            userAuth: userAuth,
+            captcha: captcha
         }
 
-        const response = await axios.post(url, data)
-        if (response.status == HttpStatusCode.Ok) 
-        return true
+        try {
+            const response = await axios.post(url, data)
+            if (response.status == HttpStatusCode.Ok) return true
+        }
+        catch (exception) {
+            if (axios.isAxiosError(exception)) {
+                return exception.response?.data
+            }
+        }
+
+        
     }
 
-    const Login = async (userAuth: UserAuthData) => {
+    const Login = async (userAuth: UserAuthData, captcha: string) => {
         const url = `${BACKEND_SERVER}/login`
+        try {
+            const response = await axios.post(url, {userAuth: userAuth, captcha: captcha}, {
+                withCredentials: true,
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            return response.status
+        }
+        catch(exception)
+        {
+            console.log(exception)
+            if (axios.isAxiosError(exception)) {
+                return exception.response?.status
+            }
+        }
+    }
+
+    const LoginByEmail = async (userAuth: UserAuthData) => {
+        const url = `${BACKEND_SERVER}/email-login`
         try {
             const response = await axios.post(url, userAuth, {
                 withCredentials: true,
@@ -94,10 +124,12 @@ export const AuthProvider: React.FC<DefaultProps> = ({children}) => {
         }
         catch(exception)
         {
+            console.log(exception)
             if (axios.isAxiosError(exception)) {
                 return exception.response?.status
             }
         }
+        
     }
 
     const FetchUser = async (): Promise<User | undefined> => {
@@ -134,7 +166,7 @@ export const AuthProvider: React.FC<DefaultProps> = ({children}) => {
 
 
     return (
-        <AuthContext.Provider value={{user, setUser, isAuthenticated, RegisterUser, Login, FetchUser, Logout}}>
+        <AuthContext.Provider value={{user, setUser, isAuthenticated, RegisterUser, Login, LoginByEmail, FetchUser, Logout}}>
             {children}
         </AuthContext.Provider>
     )  

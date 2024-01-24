@@ -13,6 +13,7 @@ import { colors } from "../defines/colors"
 import { PrimaryButton } from "../components/primary-button"
 import { Modal } from "../components/modal"
 import { OTPVerification } from "../components/modals/OTPVerification"
+import ReCAPTCHA from "react-google-recaptcha"
 
  
 
@@ -68,18 +69,20 @@ const FormContent2 = styled.div`
 `
 
 export const LoginPage = () => {
-    const {Login} = GetAuthContext()
+    const {Login, LoginByEmail} = GetAuthContext()
 
     const navigate = useNavigate()
     
     const [userAuth, setUserAuth] = useState<UserAuthData>({} as UserAuthData)
+    const [captchaKey, setCaptchaKey] = useState(0)
 
     const [showModal, setShowModal] = useState(false)
     const [changePassword, setChangePassword] = useState(false)
-
-
-    
+   
     const errorRef = useRef<HTMLParagraphElement>(null!)
+    const reCaptchaRef = useRef(null!)
+
+    const [captcha, setCaptcha] = useState<string | null>(null)
 
     useEffect(() => {
         setShowModal(false)
@@ -113,30 +116,45 @@ export const LoginPage = () => {
         return true
     }   
 
+    
+    const checkCaptcha = () => {
+        if (captcha == null || captcha == '') {
+            errorRef.current.innerText = 'Complete the captcha'
+            return false
+        }
+        errorRef.current.innerText = ''
+        return true
+    }
+
 
     const handleSubmit = async (evt: FormEvent<HTMLFormElement>) => {
         evt.preventDefault()
-        if (!checkEmail() || !checkPassword()){
+        if (!checkEmail() || !checkPassword() || !checkCaptcha()){
             errorRef.current.style.visibility = 'visible'
             return
         }
 
         errorRef.current.innerText = '[Error message]'
         errorRef.current.style.visibility = 'hidden'
-        const status = await Login(userAuth)
-
+        
+        const status = await Login(userAuth, captcha)
+        setCaptchaKey(captchaKey + 1)
         if (status == HttpStatusCode.BadRequest) {
             errorRef.current.innerText = 'Wrong email or password'
             errorRef.current.style.visibility = 'visible'
             return
         }
-
-        navigate("/")
+        else if (status == HttpStatusCode.Ok) {
+            navigate("/")
+        }
     }
 
+    const handleLoginByOTP = async () => {
+        const status = await LoginByEmail(userAuth)
 
-    const HandleForgotPassword = () => {
-        setShowModal(true)
+        if (status == HttpStatusCode.Ok) {
+            navigate('/')
+        }
     }
 
 
@@ -166,6 +184,9 @@ export const LoginPage = () => {
                         <div className="mb-1">
                             <p className="error-message" ref={errorRef}>[Error message]</p>
                         </div>
+                        <div className="mb-1">
+                            <ReCAPTCHA key={captchaKey} className="g-recaptcha" sitekey="6LehlFopAAAAAN7Kr_LO9IoWv2Gohy19lyuweBcA" ref={reCaptchaRef} onChange={value => setCaptcha(value)}/>
+                        </div>
                         <div className="mb-2">
                             <SecondaryButton >Log In</SecondaryButton>
                         </div>
@@ -177,7 +198,7 @@ export const LoginPage = () => {
                         </BorderContainer>
                         <div className="mb-1">
                             <TransparentButton onClick={() => {
-                                
+                                setShowModal(true)
                             }}>Login with OTP</TransparentButton>
                         </div>
                         <div className="mb-1">
@@ -195,7 +216,7 @@ export const LoginPage = () => {
             }}
             show={showModal}
             >
-                {showModal && <OTPVerification email={userAuth.email} onVerify={(bool: boolean) => setChangePassword(bool)}/>}
+                {showModal && <OTPVerification email={userAuth.email} onVerify={async (success: boolean) => success && handleLoginByOTP()}/>}
             </Modal>
         </div>
     )

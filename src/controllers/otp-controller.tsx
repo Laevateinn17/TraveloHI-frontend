@@ -18,3 +18,4 @@ export const VerifyOTP = async (otp: OTP) => {
 
     return response.status == HttpStatusCode.Ok ? true : false
 }
+
