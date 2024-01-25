@@ -1,11 +1,14 @@
 import image from "../assets/logo-1.png"
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
 import { PrimaryButton } from "../components/primary-button";
 import { TransparentButton } from "../components/transparent-button";
 import { FaUser } from "react-icons/fa";
 import "../styles/main.scss"
 import { GetAuthContext } from "../contexts/AuthContext";
+import { BsMoonStars, BsSun } from "react-icons/bs";
+import { GetThemeContext } from "../contexts/ThemeContext";
+import { css } from "@emotion/react";
 
 const NavbarContainer = styled.div`
     display: flex;
@@ -15,9 +18,11 @@ const NavbarContainer = styled.div`
     padding: 0.5rem 10vw;
     font-size: 1rem;
     border-bottom: 1px solid rgba(104,113,118,0.25);
-    z-index: 1;
-    background-color: white;
-` 
+    z-index: 2;
+`
+
+const ContainerDarkTheme = css`
+`
 
 const NavbarIcon = styled.img`
     max-width: 135px;
@@ -33,6 +38,7 @@ const Navbar = styled.div`
     position: fixed;
     width: 100%;
     justify-content: center;
+    z-index: 1;
 `
 
 const SecondNavbarContainer = styled.div`
@@ -49,19 +55,33 @@ const SecondNavbarItemContainer = styled.ul`
     gap: 25px;
 `
 
+const ThemeToggleContainer = styled.div`
+    // position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: red;
+    overflow:hidden;
+    cursor: pointer;
+`
+
 
 export const NavigationBar = () => {
     const {user} = GetAuthContext()
+    const { theme, toggleTheme, fontColor} = GetThemeContext()
+    const location = useLocation()
+
+    const links = ['/login', '/register']
 
     return (
         <Navbar>
-            <NavbarContainer>
+            <NavbarContainer className={theme == "dark" ? 'dark-theme' : 'light-theme'}>
                 <div className="">
                     <Link to="/">
                         <NavbarIcon src={image} alt=""/>
                     </Link>
                 </div>
-                <NavbarItemsContainer>
+                <NavbarItemsContainer >
                     {user != undefined ?( 
                         <>
                             <li><Link to="/logout">Logout</Link></li>
@@ -72,8 +92,8 @@ export const NavigationBar = () => {
                             <Link to="/login">
                                 <TransparentButton>
                                     <div className="flex gap-3">
-                                        <FaUser size={14}/>
-                                        <p>Log in</p>
+                                        <FaUser size={14} color={fontColor}/>
+                                        <p style={{color: fontColor}}>Log in</p>
                                     </div>
                                 </TransparentButton>
                             </Link>
@@ -81,16 +101,21 @@ export const NavigationBar = () => {
                             <li><Link to="/register"><PrimaryButton>Register</PrimaryButton></Link></li>
                         </>
                     )}
+                    <ThemeToggleContainer onClick={() => toggleTheme()}>
+                        <BsMoonStars className={`theme-icon ${theme != 'dark' ? 'inactive-theme' : ''}`}/>
+                        <BsSun className={`theme-icon ${theme != 'light' ? 'inactive-theme' : ''}`} fontSize={"1.1rem"}/>
+                        {/* </div> */}
+                    </ThemeToggleContainer>
                 </NavbarItemsContainer>
             </NavbarContainer>
-            <SecondNavbarContainer>
+            {!links.includes(location.pathname) && <SecondNavbarContainer className={`${theme == "dark" ? "dark-theme" : ''}`}>
                 <div className="">
                     <SecondNavbarItemContainer>
                         <li><Link to="">Hotels</Link></li>
                         <li><Link to="">Flights</Link></li>
                     </SecondNavbarItemContainer>
                 </div>
-            </SecondNavbarContainer>
+            </SecondNavbarContainer>}
         </Navbar>
     )
 }

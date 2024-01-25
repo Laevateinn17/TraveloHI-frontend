@@ -5,6 +5,7 @@ primary_dark : "#0185da",
 secondary: "#ff5e1f",
 secondary_dark: "#d9501a",
 
-dark: "#5F5F5F",
+dark: "#222629",
+light: "#eeeeee",
 border: "#cdd0d1",
 }

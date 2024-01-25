@@ -4,9 +4,12 @@ import { NavigationBar } from "../navigations/navigation-bar";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { GetAuthContext } from "../contexts/AuthContext";
+import { GetThemeContext } from "../contexts/ThemeContext";
 
 
 export const MainTemplate: React.FC<DefaultProps> = ({children}) => {
+    const {color} = GetThemeContext()
+    
     const Template = styled.div`
     width: 100%;
     min-height: 100vh;
@@ -25,12 +28,10 @@ export const MainTemplate: React.FC<DefaultProps> = ({children}) => {
         // display: flex;
         // flex-direction: column;
     `
-    console.log('tes')
 
     return (
-        <Template className="">
-            
-            <InnerTemplate>
+        <Template className="">           
+            <InnerTemplate style={{backgroundColor: color}}>
                 <NavigationBar/>
                 <ChildrenTemplate>
                     {children}

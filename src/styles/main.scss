@@ -4,7 +4,8 @@ $primary-darker: #0185da;
 $secondary: #ff5e1f;
 $secondary-dark: #d9501a;
 
-$dark: #5F5F5F;
+$dark: #222629;
+$light: #eeeeee;
 $border: #cdd0d1;
 
 
@@ -115,4 +116,32 @@ button {
 	
 	transform: scale(0.9);
 	transform-origin: 0 0;
+}
+
+.theme-icon {
+	right: 3%;
+	position: absolute;
+	// transform: translateY(110%);
+	transition: transform 0.3s;
+}
+
+.inactive-theme {
+	visibility: hidden;
+	transform: translateY(110%)
+}
+
+.dark-theme {
+	background-color: $dark !important;
+
+	* {
+		color: $light !important;
+	}
+}
+
+.light-theme {
+	background-color: #FFFFFF !important;
+
+	* {
+		color: #000000;
+	}
 }
