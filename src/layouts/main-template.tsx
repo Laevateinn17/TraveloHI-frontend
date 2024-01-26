@@ -1,13 +1,13 @@
 import styled from "@emotion/styled";
 import { DefaultProps } from "../interfaces/default-props";
 import { NavigationBar } from "../navigations/navigation-bar";
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import "../styles/main.scss"
 import { GetAuthContext } from "../contexts/AuthContext";
 import { GetThemeContext } from "../contexts/ThemeContext";
 
 
 export const MainTemplate: React.FC<DefaultProps> = ({children}) => {
+    const {user, isAuthenticated} = GetAuthContext()
     const {color} = GetThemeContext()
     
     const Template = styled.div`
@@ -29,13 +29,27 @@ export const MainTemplate: React.FC<DefaultProps> = ({children}) => {
         // flex-direction: column;
     `
 
+
     return (
         <Template className="">           
             <InnerTemplate style={{backgroundColor: color}}>
-                <NavigationBar/>
-                <ChildrenTemplate>
-                    {children}
-                </ChildrenTemplate>
+                {isAuthenticated && !user ?
+                <>
+                    <ChildrenTemplate>
+                        <div className="empty-container center-items">
+                            Loading...
+                        </div>
+                    </ChildrenTemplate>
+                </> 
+                :
+                <>
+                    <NavigationBar/>
+                    <ChildrenTemplate>
+                        {children}
+                    </ChildrenTemplate>
+                </>
+                }
+
             </InnerTemplate>
         </Template>)
 }

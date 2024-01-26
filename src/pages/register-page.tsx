@@ -65,7 +65,7 @@ export const RegisterPage: React.FC<DefaultProps> = ({}) => {
     }
 
     const checkLastName = () => {
-        if (!user.lastName || user.lastName.length <= 5) {
+        if (!user.lastName || user.lastName.length < 5) {
             errorRef.current.innerText = 'Last name must be at least 5 characters'
             return false
         }

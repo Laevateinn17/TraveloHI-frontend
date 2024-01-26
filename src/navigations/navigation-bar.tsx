@@ -8,7 +8,7 @@ import "../styles/main.scss"
 import { GetAuthContext } from "../contexts/AuthContext";
 import { BsMoonStars, BsSun } from "react-icons/bs";
 import { GetThemeContext } from "../contexts/ThemeContext";
-import { css } from "@emotion/react";
+import { UserRole } from "../enums/user-role";
 
 const NavbarContainer = styled.div`
     display: flex;
@@ -21,8 +21,6 @@ const NavbarContainer = styled.div`
     z-index: 2;
 `
 
-const ContainerDarkTheme = css`
-`
 
 const NavbarIcon = styled.img`
     max-width: 135px;
@@ -65,6 +63,10 @@ const ThemeToggleContainer = styled.div`
     cursor: pointer;
 `
 
+const Filler = styled.div`
+height: 100px;
+`
+
 
 export const NavigationBar = () => {
     const {user} = GetAuthContext()
@@ -73,7 +75,9 @@ export const NavigationBar = () => {
 
     const links = ['/login', '/register']
 
+    
     return (
+        <>
         <Navbar>
             <NavbarContainer className={theme == "dark" ? 'dark-theme' : 'light-theme'}>
                 <div className="">
@@ -108,7 +112,7 @@ export const NavigationBar = () => {
                     </ThemeToggleContainer>
                 </NavbarItemsContainer>
             </NavbarContainer>
-            {!links.includes(location.pathname) && <SecondNavbarContainer className={`${theme == "dark" ? "dark-theme" : ''}`}>
+            {!links.includes(location.pathname) && (!user || user.role == UserRole.Customer) && <SecondNavbarContainer className={`${theme == "dark" ? "dark-theme" : ''}`}>
                 <div className="">
                     <SecondNavbarItemContainer>
                         <li><Link to="">Hotels</Link></li>
@@ -116,6 +120,17 @@ export const NavigationBar = () => {
                     </SecondNavbarItemContainer>
                 </div>
             </SecondNavbarContainer>}
+            {!links.includes(location.pathname) && user?.role == UserRole.Admin && <SecondNavbarContainer>
+                <div className="">
+                    <SecondNavbarItemContainer>
+                        <li><Link to="">Add Flight</Link></li>
+                    </SecondNavbarItemContainer>
+                </div>
+            </SecondNavbarContainer>
+
+            }
         </Navbar>
+        <Filler></Filler>
+        </>
     )
 }

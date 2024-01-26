@@ -82,6 +82,7 @@ export const AuthProvider: React.FC<DefaultProps> = ({children}) => {
             if (response.status == HttpStatusCode.Ok) return true
         }
         catch (exception) {
+            console.log(exception)
             if (axios.isAxiosError(exception)) {
                 return exception.response?.data
             }
@@ -158,7 +159,7 @@ export const AuthProvider: React.FC<DefaultProps> = ({children}) => {
         catch (exception) {
             console.log(exception)
         }
-
+        setIsAuthenticated(false)
 
     }
 
