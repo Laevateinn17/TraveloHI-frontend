@@ -63,9 +63,16 @@ const ThemeToggleContainer = styled.div`
     cursor: pointer;
 `
 
-const Filler = styled.div`
-height: 100px;
+const NavbarPadding = styled.div`
+    height: 64px;
+    background-color: transparent;
 `
+
+const SecondNavbarPadding = styled.div`
+    height: 33px;
+    background-color: transparent;
+`
+
 
 
 export const NavigationBar = () => {
@@ -112,25 +119,31 @@ export const NavigationBar = () => {
                     </ThemeToggleContainer>
                 </NavbarItemsContainer>
             </NavbarContainer>
-            {!links.includes(location.pathname) && (!user || user.role == UserRole.Customer) && <SecondNavbarContainer className={`${theme == "dark" ? "dark-theme" : ''}`}>
+            {!links.includes(location.pathname) && (!user || user.role == UserRole.Customer) && 
+            <>
+            <SecondNavbarContainer className={`${theme == "dark" ? "dark-theme" : ''}`}>
                 <div className="">
                     <SecondNavbarItemContainer>
                         <li><Link to="">Hotels</Link></li>
-                        <li><Link to="">Flights</Link></li>
-                    </SecondNavbarItemContainer>
-                </div>
-            </SecondNavbarContainer>}
-            {!links.includes(location.pathname) && user?.role == UserRole.Admin && <SecondNavbarContainer>
-                <div className="">
-                    <SecondNavbarItemContainer>
-                        <li><Link to="">Add Flight</Link></li>
+                        <li><Link to="/flights">Flights</Link></li>
                     </SecondNavbarItemContainer>
                 </div>
             </SecondNavbarContainer>
-
+            </>}
+            {!links.includes(location.pathname) && user?.role == UserRole.Admin && 
+            <>
+            <SecondNavbarContainer>
+                <div className="">
+                    <SecondNavbarItemContainer>
+                        <li><Link to="/add-flight">Add Flight</Link></li>
+                    </SecondNavbarItemContainer>
+                </div>
+            </SecondNavbarContainer>
+            </>
             }
         </Navbar>
-        <Filler></Filler>
+        <NavbarPadding></NavbarPadding>
+            {!links.includes(location.pathname) && <SecondNavbarPadding/>}
         </>
     )
 }

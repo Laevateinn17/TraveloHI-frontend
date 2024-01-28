@@ -12,7 +12,6 @@ export const RequestOTP = async (email: string) => {
 }
 
 export const VerifyOTP = async (otp: OTP) => {
-    console.log(otp)
     const url = `${BACKEND_SERVER}/check-otp`
     const response = await axios.post(url, otp)
 

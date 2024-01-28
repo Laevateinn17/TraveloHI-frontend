@@ -10,7 +10,7 @@ import axios, { HttpStatusCode } from "axios"
 export interface AuthContextType {
     user: User | undefined
     setUser: Dispatch<SetStateAction<User | undefined>>
-    isAuthenticated: boolean
+    isAuthenticated: boolean | null
     RegisterUser: CallableFunction
     Login: CallableFunction
     LoginByEmail: CallableFunction
@@ -42,7 +42,7 @@ export const GetAuthContext = () => useContext(AuthContext)
 
 export const AuthProvider: React.FC<DefaultProps> = ({children}) => {
     const [user, setUser] = useState<User>()
-    const [isAuthenticated, setIsAuthenticated] = useState(false)
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
     const location = useLocation()
     useEffect(() => {
         if (isAuthenticated) {
@@ -58,6 +58,7 @@ export const AuthProvider: React.FC<DefaultProps> = ({children}) => {
     
     useEffect(() => {
         const session = getCookie(SESSION_COOKIE)
+        console.log(session)
         if (session) {
             setIsAuthenticated(true)
         }

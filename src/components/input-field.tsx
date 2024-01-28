@@ -1,5 +1,5 @@
 import styled from "@emotion/styled"
-import { ChangeEventHandler, FocusEventHandler, useState } from "react"
+import { ChangeEventHandler, FocusEventHandler, MouseEventHandler, MutableRefObject, RefObject, useState } from "react"
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5"
 
 interface ComponentProps {
@@ -10,6 +10,9 @@ interface ComponentProps {
     type?: string
     value?: string
     onBlur?: FocusEventHandler<HTMLInputElement>
+    onClick?: MouseEventHandler<HTMLInputElement>
+    onFocus?: FocusEventHandler<HTMLInputElement>
+    ref?: RefObject<HTMLInputElement>
 }
 
 const Label = styled.p`
@@ -26,6 +29,7 @@ const Input = styled.input`
     border: 1px solid #cdd0d1;
     max-height:2rem;
     width: 100%;
+    min-height: 1.9rem;
     &:focus {
         outline: none;
         border-color: #555555;
@@ -42,7 +46,7 @@ const ToggleContainer = styled.span`
 `
 
 
-export const InputField: React.FC<ComponentProps> = ({label, value, name, placeholder = "", onChange, type="text", onBlur}) => {
+export const InputField: React.FC<ComponentProps> = ({label, value, name, placeholder = "", onChange, type="text", onBlur, onClick, onFocus, ref}) => {
     const [showPassword, setShowPassword] = useState(false)
     return (
         <div>
@@ -57,13 +61,21 @@ export const InputField: React.FC<ComponentProps> = ({label, value, name, placeh
                         onBlur(e)
                     }
                 }}
+                onFocus={(e) => {
+                    if (onFocus) {
+                        onFocus(e)
+                    }
+                }}
+                onClick={(e) => {
+                    if (onClick) onClick(e)
+                }}
                 type={type != "password" ? type : showPassword ? "text" : type}/>
                 {type == "password" &&
                 <ToggleContainer
-                onMouseDown={e => {
+                onMouseDown={() => {
                     setShowPassword(true)
                 }}
-                onMouseUp={e => {
+                onMouseUp={() => {
                     setShowPassword(false)
                 }}>
                     {showPassword ? <IoEyeOffOutline className="toggle-password"/> : <IoEyeOutline className="toggle-password" />}

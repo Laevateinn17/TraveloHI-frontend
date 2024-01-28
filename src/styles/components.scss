@@ -23,6 +23,9 @@
   justify-content: center;
 }
 
+.content-container {
+    min-height: 100vh;
+}
 
 .empty-container {
     min-height: 100vh;
@@ -101,9 +104,34 @@
     margin-bottom: 1.5rem;
 }
 
+.title-sm {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
 .error-message {
     font-size: 0.8rem;
     color: red;
     visibility: hidden;
 
+}
+
+.dropdown-items {
+    position: absolute;
+    background-color: white;
+    z-index: 5;
+    border: 1px solid black;
+    // padding: 0.1rem 1rem;
+    border-radius: 5px;
+    max-height: 200px;
+    overflow-y: scroll;
+
+    li {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid $border;
+      cursor: pointer
+    }
+    li:hover {
+      background-color: $border;
+    }
 }

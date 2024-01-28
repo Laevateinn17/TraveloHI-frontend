@@ -44,7 +44,9 @@ export const RegisterPage: React.FC<DefaultProps> = ({}) => {
 
     const errorRef = useRef<HTMLParagraphElement>(null!);
     const reCaptchaRef = useRef(null)
+    
     const [captcha, setCaptcha] = useState<string | null>(null)
+    const [captchaKey, setCaptchaKey] = useState(0)
     
 
     useEffect(() => {
@@ -161,7 +163,10 @@ export const RegisterPage: React.FC<DefaultProps> = ({}) => {
         }
         errorRef.current.innerText = '[Error message]'
         errorRef.current.style.visibility = 'hidden'
+
         const response = await RegisterUser(user,  userAuth, captcha)
+        setCaptchaKey(captchaKey + 1)
+        setCaptcha(null)
 
         if (response == "email is already used") {
             errorRef.current.innerText = 'Email is already used'

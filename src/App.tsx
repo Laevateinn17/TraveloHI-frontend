@@ -8,6 +8,11 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { LogoutPage } from "./pages/logout-page";
 import { ForgotPasswordPage } from "./pages/forgot-password-page";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { PrivateRoute } from "./components/private-route";
+import { UserRole } from "./enums/user-role";
+import { AddFlightPage } from "./pages/admin/add-flight-page";
+import { FlightPage } from "./pages/flight-page";
+import { FlightSearchPage } from "./pages/flight-search-page";
 function App() {
   return (
     <BrowserRouter>
@@ -20,6 +25,11 @@ function App() {
                   <Route path="/login" element={<LoginPage/>} />
                   <Route path="/logout" element={<LogoutPage/>}/>
                   <Route path="/forgot-password" element={<ForgotPasswordPage/>}/>
+                  <Route path="/flights" element={<FlightPage/>}/>
+                  <Route path="/flights/search" element={<FlightSearchPage/>}/>
+                  <Route element={<PrivateRoute role={UserRole.Admin}/>}>
+                    <Route path="/add-flight" element={<AddFlightPage/>}/>
+                  </Route>
                 </Routes>
             </MainTemplate>
           </ThemeProvider>

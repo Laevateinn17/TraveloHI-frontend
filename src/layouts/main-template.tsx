@@ -33,7 +33,7 @@ export const MainTemplate: React.FC<DefaultProps> = ({children}) => {
     return (
         <Template className="">           
             <InnerTemplate style={{backgroundColor: color}}>
-                {isAuthenticated && !user ?
+                {(isAuthenticated == null) || (isAuthenticated && !user) ?
                 <>
                     <ChildrenTemplate>
                         <div className="empty-container center-items">

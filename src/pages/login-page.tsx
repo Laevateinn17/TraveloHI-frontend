@@ -139,6 +139,7 @@ export const LoginPage = () => {
         
         const status = await Login(userAuth, captcha)
         setCaptchaKey(captchaKey + 1)
+        setCaptcha(null)
         if (status == HttpStatusCode.BadRequest) {
             errorRef.current.innerText = 'Wrong email or password'
             errorRef.current.style.visibility = 'visible'
