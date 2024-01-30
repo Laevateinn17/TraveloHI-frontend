@@ -23,7 +23,6 @@ export const GetAirplanes = async () => {
 export const GetAvailableAirplanes = async (airline: Airline, departureTime: Date, arrivalTime: Date)  : Promise<Airplane[] | undefined> => {
     const url = `${BACKEND_SERVER}/available-planes`
 
-    console.log(airline, departureTime, arrivalTime)
     try {
         const response = await axios.post(url, {
             airline: airline,

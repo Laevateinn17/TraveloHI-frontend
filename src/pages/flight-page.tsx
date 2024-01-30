@@ -1,7 +1,7 @@
 import styled from "@emotion/styled"
 import { InputField } from "../components/input-field"
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
-import { FlightSchedule } from "../interfaces/flight-schedule"
+import { SearchFlightScheduleData } from "../interfaces/flight-schedule"
 import { SecondaryButton } from "../components/secondary-button"
 import { PiMagnifyingGlass } from "react-icons/pi"
 import { DropdownSearch } from "../components/dropdown-search"
@@ -43,8 +43,7 @@ const ButtonLayout = styled.div`
 
 export const FlightPage = () => {
     const navigate = useNavigate()
-    const [schedule, setSchedule] = useState<FlightSchedule>({} as FlightSchedule)
-    const [passengerCount, setPassengerCount] = useState(0)
+    const [searchData, setSearchData] = useState<SearchFlightScheduleData>({} as SearchFlightScheduleData)
 
     const [airports, setAirports] = useState<Airport[]>()
 
@@ -55,11 +54,11 @@ export const FlightPage = () => {
     const handleOnChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         let value: any = e.target.value
 
-        if (e.target.name == 'departureTime' || e.target.name == 'arrivalTime') value = new Date(e.target.value).toISOString()
+        if (e.target.name == 'departureDate' || e.target.name == 'returnDate') value = new Date(e.target.value).toISOString()
         
-        setSchedule({...schedule, [e.target.name]: value})
-        if (e.target.name == 'departureTime' && schedule.arrivalTime == undefined) {
-            setSchedule(prev => ({...prev, arrivalTime: value}))
+        setSearchData({...searchData, [e.target.name]: value})
+        if (e.target.name == 'departureTime' && searchData.returnDate == undefined) {
+            setSearchData((prev) => ({...prev, returnDate: value}))
         }
     }
 
@@ -67,10 +66,11 @@ export const FlightPage = () => {
         e.preventDefault()
 
         navigate('/flights/search', {state: {
-            departureAirport : schedule.departureAirport,
-            destinationAirport: schedule.destinationAirport,
-            departureDate: schedule.departureTime,
-            passengerCount: passengerCount
+            searchData
+            // departureAirport : searchData.departureAirport,
+            // destinationAirport: searchData.destinationAirport,
+            // departureDate: searchData.departureTime,
+            // passengerCount: passengerCount
         }})
     }
     
@@ -84,22 +84,22 @@ export const FlightPage = () => {
                                 <DropdownSearch label="From" 
                                 list={airports ? airports.map(airport => `${airport.country} / ${airport.city} / ${airport.name} (${airport.code})`) : ['Loading...']}
                                 onChange={e => {
-                                    setSchedule({...schedule, departureAirport: airports?.find(airport => e.target.value.includes(airport.code) && e.target.value.includes(airport.name))!})
+                                    setSearchData({...searchData, departureAirport: airports?.find(airport => e.target.value.includes(airport.code) && e.target.value.includes(airport.name))!})
                                 }}/>
                                 {/* <InputField onChange={handleOnChange} label="From"/> */}
                                 <DropdownSearch label="To" 
                                 list={airports ? airports.map(airport => `${airport.country} / ${airport.city} / ${airport.name} (${airport.code})`) : ['Loading...']}
                                 onChange={e => {
-                                    setSchedule({...schedule, destinationAirport: airports?.find(airport => e.target.value.includes(airport.code) && e.target.value.includes(airport.name))!})
+                                    setSearchData({...searchData, destinationAirport: airports?.find(airport => e.target.value.includes(airport.code) && e.target.value.includes(airport.name))!})
                                 }}/>
                                 {/* <InputField onChange={handleOnChange} label="To"/> */}
                             </AirportInputContainer>
                             <div className="">
-                                <InputField label="No. of Passengers" type="number" onChange={(e) =>setPassengerCount(parseInt(e.target.value))}/>
+                                <InputField label="No. of Passengers" type="number" onChange={(e) => setSearchData({...searchData, passengerCount: parseInt(e.target.value)})}/>
                             </div>
                         </FirstInputContainer>
                         <DateInputContainer>
-                            <InputField name="departureTime" type="date" onChange={handleOnChange} label="Departure Date"/>
+                            <InputField name="departureDate" type="date" onChange={handleOnChange} label="Departure Date"/>
                             {/* <InputField name="arrivalTime" type="date" onChange={handleOnChange} label="Return Date"/> */}
                         </DateInputContainer>
                     <SecondaryButton>

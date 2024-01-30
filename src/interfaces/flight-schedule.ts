@@ -26,3 +26,11 @@ export interface FlightSchedule {
 	// FlightTicketID       uint      `json:"-"`
 	// Price                uint64    `json:"price"`
 }
+
+export interface SearchFlightScheduleData {
+	departureDate: string
+	returnDate: string
+	departureAirport: Airport
+	destinationAirport: Airport
+	passengerCount: number
+}

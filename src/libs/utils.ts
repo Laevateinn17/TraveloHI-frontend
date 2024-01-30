@@ -38,3 +38,10 @@ export const dateToInputDateTime = (date: Date): string => {
     .slice(0, -3)}`
   return formattedDateTime
 }
+
+export const dateToTime = (date: Date) => {
+  const hours = ('0' + date.getHours()).slice(-2);
+  const minutes = ('0' + date.getMinutes()).slice(-2);
+
+  return `${hours}:${minutes}`
+}
